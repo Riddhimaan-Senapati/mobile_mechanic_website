@@ -12,11 +12,34 @@ function LoginButton(){
   ); 
 }
 
+function HomeButton(){
+  const goto_home = () => {
+    return <Home />
+  }
+
+  return(
+    <button onClick={goto_home}> Mobile Mechanic </button>
+  ); 
+}
+
+function NavBar(){
+  return (
+    <div>
+        <HomeButton />
+        <LoginButton />
+      </div>
+  ); 
+}
+
 export default function Home() {
   return (
     <div>
-      <h1> Are we in your area? </h1>
-      <LoginButton />
+      <NavBar />
+
+      <div>
+        <h1> Are we in your area? </h1>
+      </div>
+      
     </div>
   );
 }
