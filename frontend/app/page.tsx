@@ -4,7 +4,7 @@ import Image from "next/image";
 
 function LoginButton(){
   const goto_login = () => {
-    return <Login Page />
+    return <LoginPage />
   }
 
   return(
