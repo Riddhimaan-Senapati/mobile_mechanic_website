@@ -2,6 +2,9 @@
 import { use } from "react";
 import NavBar from "../NavBar";
 import { useRouter } from "next/navigation";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Button } from "@/components/ui/button";
+import { Book } from "lucide-react";
 
 function BookingButton(){
     const router = useRouter(); 
@@ -10,7 +13,7 @@ function BookingButton(){
     }
 
     return(
-        <button onClick={goto_booking}>Create Booking</button>
+        <Button variant="outline" onClick={goto_booking}>Create Booking</Button>
     );
 }
 
@@ -21,7 +24,7 @@ function MessagingButton(){
     }
 
     return(
-        <button onClick={goto_messaging}>Messaging</button>
+        <Button variant="outline" onClick={goto_messaging}>Messaging</Button>
     );
 }
 
@@ -32,7 +35,7 @@ function BillingButton(){
     }
 
     return(
-        <button onClick={goto_billing}>Billing</button>
+        <Button variant="outline" onClick={goto_billing}>Billing</Button>
     );
 }
 
@@ -41,10 +44,13 @@ export default function Customer_Landing(){
         <div>
             <NavBar/>
 
-            <h1> Customer Landing Page</h1>
-            <MessagingButton />
-            <BookingButton />
-            <BillingButton />
+            <h1 className="text-lg">Account Info</h1>
+
+            <ButtonGroup>
+                <MessagingButton />
+                <BookingButton /> 
+                <BillingButton /> 
+            </ButtonGroup>
         </div>
     )
 }

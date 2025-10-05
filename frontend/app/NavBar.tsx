@@ -1,5 +1,6 @@
 'use client'
 import {useRouter} from "next/navigation"; 
+import { Button } from "@/components/ui/button";
 
 function LoginButton(){
     const router = useRouter(); 
@@ -8,7 +9,7 @@ function LoginButton(){
     }
 
     return(
-    <button className = "navButton" onClick={goto_login}>Log In</button>
+    <Button variant="outline" className="object-right" onClick={goto_login}>John Doe</Button>
     ); 
 }
 
@@ -19,15 +20,15 @@ function HomeButton(){
     }
 
   return(
-    <button className = "navButton" onClick={goto_home}>Mobile Mechanic</button>
+    <Button variant="outline" className="object-left" onClick={goto_home}>Mobile Mechanic</Button>
   ); 
 }
 
 export default function NavBar(){
   return (
-    <div className = "navBar">
+    <nav className="flex items-center justify-between">
         <HomeButton />
         <LoginButton />
-      </div>
+    </nav>
   ); 
 }
