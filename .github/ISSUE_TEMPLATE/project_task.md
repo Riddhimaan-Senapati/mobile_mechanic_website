@@ -1,5 +1,6 @@
 ---
 name: Project Task
+about: Use this template for Project tasks
 title: '[COMPONENT] Brief description'
 assignees: ''
 ---
