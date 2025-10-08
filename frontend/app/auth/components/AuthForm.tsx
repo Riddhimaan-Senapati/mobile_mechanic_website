@@ -34,7 +34,7 @@ export default function AuthForm({
         className="p-2 border rounded"
         required
       />
-      <button type="submit" className="bg-blue-600 text-white p-2 rounded">
+      <button type="submit" className="p-2 rounded">
         {submitLabel}
       </button>
     </form>
