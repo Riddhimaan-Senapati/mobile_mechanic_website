@@ -1,5 +1,6 @@
 env
 .env
 
-# ignore package-lock.json
+# ignore package-lock.json files anywhere
+**/package-lock.json
 package-lock.json
