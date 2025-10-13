@@ -9,7 +9,7 @@ function LoginButton(){
     }
 
     return(
-    <Button variant="outline" className="object-right" onClick={goto_login}>John Doe</Button>
+    <Button variant="ghost" className="object-right" onClick={goto_login}>John Doe</Button>
     ); 
 }
 
@@ -20,13 +20,13 @@ function HomeButton(){
     }
 
   return(
-    <Button variant="outline" className="object-left" onClick={goto_home}>Mobile Mechanic</Button>
+    <Button variant="ghost" className="object-left" onClick={goto_home}>Mobile Mechanic</Button>
   ); 
 }
 
 export default function NavBar(){
   return (
-    <nav className="flex items-center justify-between">
+    <nav className="flex items-center justify-between px-4 pt-4">
         <HomeButton />
         <LoginButton />
     </nav>
