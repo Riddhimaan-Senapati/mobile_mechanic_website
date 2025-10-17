@@ -56,6 +56,7 @@ export default function Create_Booking() {
                 <Input id="issue" placeholder="Describe the problem" />
               </div>
 
+              {/* allows user to select image & preview it  */}
               <div className="space-y-2">
                 <Label htmlFor="image">Upload Image</Label>
                 <Input
