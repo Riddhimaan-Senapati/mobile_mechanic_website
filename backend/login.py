@@ -11,7 +11,7 @@ DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 
-url = f"postgresql://postgres:password123@db.lperpdujkzvsotsthwtd.supabase.co:5432/postgres"
+url = "postgresql://postgres:password123@db.lperpdujkzvsotsthwtd.supabase.co:5432/postgres"
 
 engine = create_engine(url, connect_args={"sslmode": "require"})
 
