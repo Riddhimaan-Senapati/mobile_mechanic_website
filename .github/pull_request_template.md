@@ -22,7 +22,7 @@ Detail the testing procedures you followed to validate your changes. Include ste
 
 Ensure the following criteria are met before requesting a review:
 
-- [ ] My code adheres to the project's style guidelines( I appeased the linting gods by running `uvx ruff check --fix` and `uvx ruff format`(Install uv with `pip install uv` and then `uv tool install ruff` for ruff) for the backend, Prettier/ESLint for the frontend)
+- [ ] My code adheres to the project's style guidelines( I appeased the linting gods by running `uvx ruff check --fix` and `uvx ruff format`(Install uv with `pip install uv` and then `uv tool install ruff` for ruff) for the backend, `npx next lint` or `npm run lint` for the frontend)
 - [ ] I have performed a self-review of my code
 - [ ] I have commented on complex areas of the code
 - [ ] I have updated the documentation as necessary(Update the README with updated structure if reorganizing or creating new files)
