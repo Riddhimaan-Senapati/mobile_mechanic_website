@@ -17,8 +17,7 @@ engine = create_engine(url, connect_args={"sslmode": "require"})
 
 app = FastAPI()
 
-@app.get('/')
+
+@app.get("/")
 def root():
-    return{"message" : "Connected to DB"}
-
-
+    return {"message": "Connected to DB"}

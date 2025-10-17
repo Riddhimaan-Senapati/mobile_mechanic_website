@@ -31,20 +31,22 @@ class newUser(BaseModel):
     confirmPassword: str
 
 
-
 @app.post("/new user/")
 def create_user(user: newUser):
     query = text(""" INSERT INTO users (firstn, lastn, email, number, password, "confirmPassword")
                  VALUES (:firstn, :lastn, :email, :number, :password, :confirmPassword)""")
 
     with engine.begin() as conn:
-        conn.execute(query, {
-            "firstn":user.firstn,
-            "lastn":user.lastn,
-            "email":user.email,
-            "number":user.number,
-            "password":user.password,
-            "confirmPassword":user.confirmPassword
-        })
+        conn.execute(
+            query,
+            {
+                "firstn": user.firstn,
+                "lastn": user.lastn,
+                "email": user.email,
+                "number": user.number,
+                "password": user.password,
+                "confirmPassword": user.confirmPassword,
+            },
+        )
 
-    return {"message":"New user added!", "username":user.firstn}
+    return {"message": "New user added!", "username": user.firstn}
