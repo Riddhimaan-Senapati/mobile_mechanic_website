@@ -2,14 +2,16 @@
 import NavBar from "../NavBar";
 import Calendar20 from "@/components/calendar-20";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 
 export default function Create_Booking() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [image, setImage] = React.useState<string | null>(null);
+    const router = useRouter();
+    const [date, setDate] = React.useState<Date | undefined>(new Date())
+    const [image, setImage] = React.useState<string | null>(null)
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,11 +105,11 @@ export default function Create_Booking() {
           </Card>
         </div>
 
-        <div className="mt-6 flex justify-end gap-4">
-          <Button variant="outline">Cancel</Button>
-          <Button>Submit Booking</Button>
+                <div className="mt-6 flex justify-end gap-4">
+                    <Button variant="outline" onClick={() => router.push("/customer_landing")}>Cancel</Button>
+                    <Button>Submit Booking</Button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

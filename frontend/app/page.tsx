@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import { useState, useRef, useEffect } from "react";
 import NavBar from "./NavBar";
 import { Input } from "@/components/ui/input";
@@ -47,6 +49,8 @@ export default function Home() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(false);
+  const [zipcode, setZipcode] = useState("");
+  const [message, setMessage] = useState("");
 
   const updateArrows = () => {
     // change arrows if reached end
@@ -133,11 +137,21 @@ export default function Home() {
                       pattern="[0-9]{5}"
                       id="zipcode"
                       placeholder="Five-digit zip code"
+                      value={zipcode}
+                      onChange={(e) => setZipcode(e.target.value)}
                     />
-                    <Button type="submit" variant="outline">
+                    <Button type="submit" variant="outline" onClick={() => {
+                      const zip = parseInt(zipcode);
+                      if (zip >= 998 && zip <= 1008) {
+                        window.location.href = "/customer_landing";
+                      } else {
+                        setMessage("Sorry, we don't currently service your area. We serve zip codes 00998-01008.");
+                      }
+                    }}>
                       Go
                     </Button>
                   </div>
+                  {message && <p className="text-sm text-red-600 mt-2 text-center">{message}</p>}
                 </CardContent>
               </Card>
             </div>
