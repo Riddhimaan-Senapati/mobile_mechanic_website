@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 function LoginButton() {
   const router = useRouter();
@@ -9,7 +10,11 @@ function LoginButton() {
   };
 
   return (
-    <Button variant="ghost" className="object-right" onClick={goto_login}>
+    <Button
+      variant="ghost"
+      className="object-right text-md"
+      onClick={goto_login}
+    >
       John Doe
     </Button>
   );
@@ -22,7 +27,8 @@ function HomeButton() {
   };
 
   return (
-    <Button variant="ghost" className="object-left" onClick={goto_home}>
+    <Button variant="ghost" className="object-left text-md" onClick={goto_home}>
+      <img src="logotrans.png" className="w-8 h-8"></img>
       Mobile Mechanic
     </Button>
   );
@@ -30,9 +36,13 @@ function HomeButton() {
 
 export default function NavBar() {
   return (
-    <nav className="flex items-center justify-between px-4 pt-4">
-      <HomeButton />
-      <LoginButton />
+    <nav className="bg-white">
+      <div className="flex items-center justify-between px-4 pt-4 pb-4 mx-auto max-w-5xl">
+        <HomeButton />
+        <LoginButton />
+      </div>
+
+      <Separator />
     </nav>
   );
 }

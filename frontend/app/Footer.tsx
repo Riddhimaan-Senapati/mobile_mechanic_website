@@ -8,21 +8,21 @@ export default function Footer() {
       <div className="mx-auto flex w-full justify-center p-4">
         <div className="flex object-center gap-3">
           <div>
-            <p className="text-sm text-muted-foreground">Contact Us</p>
+            <p className="text-md text-muted-foreground">Contact Us</p>
           </div>
           <Separator
             className="bg-gray-200 dark:bg-gray-800 w-px h-6"
             orientation="vertical"
           />
           <div>
-            <p className="text-sm text-muted-foreground">123-456-7890</p>
+            <p className="text-md text-muted-foreground">123-456-7890</p>
           </div>
           <Separator
             className="bg-gray-200 dark:bg-gray-800 w-px h-6"
             orientation="vertical"
           />
           <div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-md text-muted-foreground">
               help@mobilemechanic.com
             </p>
           </div>
