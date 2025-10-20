@@ -78,7 +78,7 @@ export default function Home() {
 
   function ServiceIcon({ children }: { children: JSX.Element }) {
     return (
-      <div className="mb-1 flex items-center justify-center size-10 sm:size-10 lg:size-12 aspect-square overflow-hidden">
+      <div className="mb-1 flex-none shrink-0 items-center justify-center size-10 sm:size-10 lg:size-12 aspect-square overflow-hidden">
         <div className="size-[88%]">{children}</div>
       </div>
     );
@@ -86,7 +86,7 @@ export default function Home() {
 
   function ReasonIcon({ children }: { children: JSX.Element }) {
     return (
-      <div className="flex items-center justify-center size-8 sm:size-9 lg:size-10 aspect-square overflow-hidden">
+      <div className="flex-none shrink-0 items-center justify-center size-8 sm:size-9 lg:size-10 aspect-square overflow-hidden">
         <div className="size-[88%]">{children}</div>
       </div>
     );
