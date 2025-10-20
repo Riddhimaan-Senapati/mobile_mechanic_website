@@ -125,6 +125,7 @@ export default function Home() {
                 Go
               </Button>
             </div>
+            {message && <p className="text-base text-red-600 mt-2 text-center">{message}</p>}
           </CardContent>
         </Card>
       </section>
