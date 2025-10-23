@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import LoginPage from "./auth/login/page";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
