@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 
 export default function Create_Booking() {
   const router = useRouter();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  // const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [image, setImage] = React.useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

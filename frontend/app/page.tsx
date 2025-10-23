@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import LoginPage from "./auth/login/page";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
@@ -31,7 +30,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-const services: { name: string; icon: (p?: any) => JSX.Element }[] = [
+import type { LucideProps } from "lucide-react";
+
+const services: { name: string; icon: (p?: LucideProps) => JSX.Element }[] = [
   { name: "Oil change", icon: (p) => <Fuel {...p} /> },
   { name: "Battery replacement", icon: (p) => <BatteryCharging {...p} /> },
   { name: "Brake service", icon: (p) => <Car {...p} /> },
@@ -46,19 +47,19 @@ const services: { name: string; icon: (p?: any) => JSX.Element }[] = [
   { name: "Scheduled maintenance", icon: (p) => <Cog {...p} /> },
 ];
 
-const reasons = [
-  { title: "Family-owned & operated", icon: (p?: any) => <Users {...p} /> },
-  { title: "25+ years of experience", icon: (p?: any) => <Award {...p} /> },
+const reasons: { title: string; icon: (p?: LucideProps) => JSX.Element }[] = [
+  { title: "Family-owned & operated", icon: (p) => <Users {...p} /> },
+  { title: "25+ years of experience", icon: (p) => <Award {...p} /> },
   {
     title: "Fair & transparent prices",
-    icon: (p?: any) => <CircleDollarSign {...p} />,
+    icon: (p) => <CircleDollarSign {...p} />,
   },
-  { title: "Weekend & same-day service", icon: (p?: any) => <Clock {...p} /> },
+  { title: "Weekend & same-day service", icon: (p) => <Clock {...p} /> },
   {
     title: "ASE-certified technicians",
-    icon: (p?: any) => <ShieldCheck {...p} />,
+    icon: (p) => <ShieldCheck {...p} />,
   },
-  { title: "We come to you", icon: (p?: any) => <MapPin {...p} /> },
+  { title: "We come to you", icon: (p) => <MapPin {...p} /> },
 ];
 
 export default function Home() {
