@@ -1,0 +1,25 @@
+{
+  "name": "mobile_mechanic_website",
+  "version": "1.0.0",
+  "description": "CS 320 Project",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Riddhimaan-Senapati/mobile_mechanic_website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Riddhimaan-Senapati/mobile_mechanic_website/issues"
+  },
+  "homepage": "https://github.com/Riddhimaan-Senapati/mobile_mechanic_website#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.1"
+  }
+}
