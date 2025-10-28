@@ -9,9 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 
 export default function Create_Booking() {
-    const router = useRouter();
-    const [date, setDate] = React.useState<Date | undefined>(new Date())
-    const [image, setImage] = React.useState<string | null>(null)
+  const router = useRouter();
+  // const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [image, setImage] = React.useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,7 +28,7 @@ export default function Create_Booking() {
     <div className="min-h-screen bg-gray-50">
       <NavBar />
 
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-5xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">Create Booking</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,11 +105,16 @@ export default function Create_Booking() {
           </Card>
         </div>
 
-                <div className="mt-6 flex justify-end gap-4">
-                    <Button variant="outline" onClick={() => router.push("/customer_landing")}>Cancel</Button>
-                    <Button>Submit Booking</Button>
-                </div>
-            </div>
+        <div className="mt-6 flex justify-end gap-4">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/customer_landing")}
+          >
+            Cancel
+          </Button>
+          <Button>Submit Booking</Button>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

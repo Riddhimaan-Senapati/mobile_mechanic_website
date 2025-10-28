@@ -1,9 +1,13 @@
+# ignore .env file
 env
 .env
 
 # ignore package-lock.json files anywhere
 **/package-lock.json
 package-lock.json
+
+
+
 
 # Playwright
 node_modules/
