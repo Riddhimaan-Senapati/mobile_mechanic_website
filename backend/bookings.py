@@ -35,6 +35,16 @@ class BookingImg(BaseModel):
     booking_id: str
     image_url: HttpUrl
 
+class EditBooking(BaseModel):
+    id: str
+    email: EmailStr | None = None
+    make: str | None = None
+    model: str | None = None
+    year: str | None = None
+    address: str | None = None
+    description: str | None = None
+    datetime: datetime
+
 @app.post("/add-new-booking")
 def new_booking(booking: Booking):
     query = text(""" INSERT INTO "BookingInfo" (email, make, model, year, address, description, datetime)
@@ -61,6 +71,47 @@ def delete_booking(email: EmailStr, date_time: datetime):
         return {"message": "Booking deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail = f"Error deleting booking: {str(e)}")
+
+@app.get("/get-bookings")  
+def get_all_bookings():
+    query = text(""" SELECT * FROM "BookingInfo" ORDER BY datetime DESC; """)
+    try:
+        with engine.begin() as conn:
+            res = conn.execute(query)
+            bookings = [dict(row._mapping) for row in res]
+        return {"Bookings": bookings}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail = f"Error fetch bookings: {str(e)}")
+    
+@app.put("/edit-booking")
+def edit_booking(edit: EditBooking):
+    fields = {}
+    params = {"id":edit.id}
+    for key, value in edit.model_dump():
+        if (key != "id"):
+            fields.append(f'{key} = :{key}')
+            params[key] = value
+    if (len(fields) == 0):
+        raise HTTPException(status_code=400, detail="No fields provided for update")
+    
+    query = text('''
+        UPDATE "BookingInfo"
+        SET {", ".join(fields)}
+        WHERE id = :id
+        RETURNING id;
+    ''')
+    try: 
+        with engine.begin() as conn:
+            res = conn.execute(query, params)
+            updated_ornot = res.scalar()
+            if not updated_ornot:
+                raise HTTPException(status_code=404, detail="Booking not found")
+        return {"message": "Booking updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error updating booking: {str(e)}")
+
+
+
     
 @app.post("/add-booking-image")
 def add_image(img: BookingImg):
