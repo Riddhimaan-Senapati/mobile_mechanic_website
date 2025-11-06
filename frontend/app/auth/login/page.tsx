@@ -10,12 +10,14 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async (email: string, password: string) => {
+    console.log("Entering handle login function")
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
     if (error) setError(error.message)
-    else window.location.href = "/"  // redirect after login
+  
+    else window.location.href = "/customer_landing"  // redirect after login
   }
 
   return (
