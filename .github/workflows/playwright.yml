@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Install playwright browsers
-        run: npm playwright install --with-deps
+        run: npx playwright install --with-deps
         
       # - name: Start frontend app and wait for it to be ready
       #   working-directory: frontend
