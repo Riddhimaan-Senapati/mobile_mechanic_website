@@ -37,6 +37,7 @@
     "eslint": "^9.37.0",
     "eslint-config-next": "15.5.6",
     "tailwindcss": "^4.1.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^9.0.1"
   }
 }

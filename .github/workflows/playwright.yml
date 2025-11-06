@@ -1,4 +1,4 @@
-name: Full Stack Playwright E2E
+name: Frontend Playwright Tests
 
 on:
   pull_request:
@@ -15,23 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # ---- BACKEND SETUP ----
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install backend dependencies
-        working-directory: backend
-        run: pip install -r requirements.txt
-
-      - name: Start backend API
-        working-directory: backend
-        run: |
-          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
-          sleep 5
-
-      # ---- FRONTEND SETUP ----
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
@@ -41,13 +24,14 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Start frontend app
+      - name: Start frontend app and wait for it to be ready
         working-directory: frontend
         run: |
-          nohup npm run dev -- --port 3000 &
-          sleep 10
+          nohup npm run dev -- --hostname 0.0.0.0 --port 3000 > server.log 2>&1 &
+          echo "Starting frontend and waiting for it to be reachable..."
+          npx wait-on http://localhost:3000
+          echo "Frontend is up!"
 
-      # ---- PLAYWRIGHT ----
       - name: Install Playwright browsers
         working-directory: frontend
         run: npx playwright install --with-deps
