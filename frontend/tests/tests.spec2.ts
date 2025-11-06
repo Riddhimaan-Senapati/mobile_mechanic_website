@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
-  await page.goto('http://localhost:3001/');
+  await page.goto('http://localhost:3000/');
   await page.getByRole('textbox', { name: 'Five-digit zip code' }).click();
   await page.getByRole('textbox', { name: 'Five-digit zip code' }).fill('01003');
   await page.locator('div').filter({ hasText: /^Oil change$/ }).nth(1).click();
