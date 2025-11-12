@@ -1,0 +1,437 @@
+"use client";
+import "@radix-ui/themes/styles.css";
+import React from "react";
+import NavBar from "../NavBar";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import SliderDemo from "../mechanic_landing/Slider.jsx";
+import { cn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import {
+  MessageSquare,
+  CalendarDays,
+  CreditCard,
+  Check,
+  X,
+  Pencil,
+} from "lucide-react";
+
+function MessagingButton() {
+  const router = useRouter();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => router.push("/messaging")}
+      className="flex items-center gap-2 text-base"
+    >
+      <MessageSquare className="w-4 h-4" /> Messages
+    </Button>
+  );
+}
+
+function BookingButton() {
+  const router = useRouter();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => router.push("/create_booking")}
+      className="flex items-center gap-2 text-base"
+    >
+      <CalendarDays className="w-4 h-4" /> Create Appointment
+    </Button>
+  );
+}
+
+function BillingButton() {
+  const router = useRouter();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => router.push("/billing")}
+      className="flex items-center gap-2 text-base"
+    >
+      <CreditCard className="w-4 h-4" /> Billing
+    </Button>
+  );
+}
+
+export default function Customer_Landing() {
+  const [appointment, setAppointment] = React.useState<null | {
+    date: string;
+    time: string;
+    address: string;
+    make: string;
+    model: string;
+    year: string;
+    issue: string;
+  }>(null);
+
+  const [prevAppointment] = React.useState<null | {
+    date: string;
+    time: string;
+    address: string;
+    make: string;
+    model: string;
+    year: string;
+    issue: string;
+  }>(null);
+
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [editedAppointment, setEditedAppointment] =
+    React.useState<typeof appointment>(null);
+
+  const location = "Amherst, Massachusetts"; // get this from backend later, just for example
+
+  // Mock appointment for demonstration
+  React.useEffect(() => {
+    setAppointment({
+      date: "Monday, December 29, 2025",
+      time: "3:00–4:00 PM",
+      address: "620 Massachusetts Ave, Amherst, MA",
+      make: "Toyota",
+      model: "Corolla",
+      year: "2010",
+      issue:
+        "some annoying lil kids came by on Halloween n they were dressed as Michael Meyers n they smashed my windshield in",
+    });
+  }, []);
+
+  // Handle edit mode toggle
+  const handleModify = () => {
+    if (appointment) {
+      setEditedAppointment({ ...appointment });
+      setIsEditing(true);
+    }
+  };
+
+  // Handle cancel
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedAppointment(null);
+  };
+
+  // Handle save
+  const handleSave = () => {
+    if (editedAppointment) {
+      setAppointment(editedAppointment);
+      setIsEditing(false);
+    }
+  };
+
+  // Handle input change
+  const handleChange = (
+    field: keyof NonNullable<typeof appointment>,
+    value: string
+  ) => {
+    if (!editedAppointment) return;
+    setEditedAppointment({ ...editedAppointment, [field]: value });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <NavBar />
+
+      <div className="max-w-5xl mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-semibold">Admin Information</h1>
+        </div>
+
+        {/* Personal Info */}
+        <Card className="bg-white p-0 rounded-md">
+          <CardContent className="flex flex-row md:flex-col p-6 gap-3">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">Admin Panel</h2>
+              <p>
+                <span className="font-medium">Location:</span> {location}
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 text-base"
+                  >
+                    <Pencil className="w-4 h-4" /> Edit Location
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="grid gap-4 bg-white outline rounded-md p-6">
+                    <div className="space-y-2">
+                      <h1 className="leading-none font-semibold text-lg">
+                        Location
+                      </h1>
+                      <p className="text-muted-foreground text-sm">
+                        Enter a street address, city, or zip code.
+                      </p>
+                      <Input
+                        id="location"
+                        type="text"
+                        defaultValue={location}
+                        className="col-span-2 h-8"
+                      />
+                    </div>
+                    <div className="space-y-2 w-full">
+                      <h1 className="leading-none font-semibold text-lg">
+                        Radius
+                      </h1>
+                      <p className="text-muted-foreground text-sm">
+                        Area of service (in miles).
+                      </p>
+                      <span className="w-full flex justify-between flex-row">
+                        {/* <Slider
+                          className="h-5 w-full z-10000"
+                          defaultValue={[500]}
+                          max={1000}
+                          step={1}
+                        /> */}
+                        <SliderDemo />
+                        <p>25 mi.</p>
+                      </span>
+                      {/* <RadiusSlider /> */}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 text-base"
+              >
+                <Pencil className="w-4 h-4" /> Edit Availability
+              </Button>
+              <MessagingButton />
+              <BookingButton />
+              <BillingButton />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Upcoming Appointments */}
+        <Card className="bg-white rounded-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold">
+              Upcoming Appointments
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            {appointment ? (
+              <div className="border rounded-md bg-gray-50 p-5">
+                {isEditing ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Date
+                        </label>
+                        <Input
+                          value={editedAppointment?.date || ""}
+                          onChange={(e) => handleChange("date", e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Time
+                        </label>
+                        <Input
+                          value={editedAppointment?.time || ""}
+                          onChange={(e) => handleChange("time", e.target.value)}
+                        />
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Address
+                        </label>
+                        <Input
+                          value={editedAppointment?.address || ""}
+                          onChange={(e) =>
+                            handleChange("address", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Make
+                        </label>
+                        <Input
+                          value={editedAppointment?.make || ""}
+                          onChange={(e) => handleChange("make", e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Model
+                        </label>
+                        <Input
+                          value={editedAppointment?.model || ""}
+                          onChange={(e) =>
+                            handleChange("model", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Year
+                        </label>
+                        <Input
+                          value={editedAppointment?.year || ""}
+                          onChange={(e) => handleChange("year", e.target.value)}
+                        />
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Issue
+                        </label>
+                        <Input
+                          value={editedAppointment?.issue || ""}
+                          onChange={(e) =>
+                            handleChange("issue", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 mt-6">
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={handleCancel}
+                      >
+                        <X className="w-4 h-4 mr-1" /> Cancel
+                      </Button>
+                      <Button className="flex-1" onClick={handleSave}>
+                        <Check className="w-4 h-4 mr-1" /> Save Changes
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-semibold text-lg mb-2">
+                      {appointment.date}
+                    </p>
+                    <p>
+                      <span className="font-medium">Time:</span>{" "}
+                      {appointment.time}
+                    </p>
+                    <p>
+                      <span className="font-medium">Address:</span>{" "}
+                      {appointment.address}
+                    </p>
+                    <p>
+                      <span className="font-medium">Make:</span>{" "}
+                      {appointment.make}
+                    </p>
+                    <p>
+                      <span className="font-medium">Model:</span>{" "}
+                      {appointment.model}
+                    </p>
+                    <p>
+                      <span className="font-medium">Year:</span>{" "}
+                      {appointment.year}
+                    </p>
+                    <p className="truncate">
+                      <span className="font-medium">Issue:</span>{" "}
+                      {appointment.issue}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                      <Button variant="outline" className="flex-1 text-base">
+                        View/Upload Images
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex-1 text-base"
+                        onClick={handleModify}
+                      >
+                        Modify Booking
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="text-gray-600 text-center py-6 italic">
+                No upcoming appointments.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Previous Appointments */}
+        <Card className="bg-white rounded-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold">
+              Previous Appointments
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            {prevAppointment ? (
+              <div className="border rounded-md bg-gray-50 p-5">
+                <p className="font-semibold text-lg mb-2">
+                  {prevAppointment.date}
+                </p>
+                <p>
+                  <span className="font-medium">Time:</span>{" "}
+                  {prevAppointment.time}
+                </p>
+                <p>
+                  <span className="font-medium">Address:</span>{" "}
+                  {prevAppointment.address}
+                </p>
+                <p>
+                  <span className="font-medium">Make:</span>{" "}
+                  {prevAppointment.make}
+                </p>
+                <p>
+                  <span className="font-medium">Model:</span>{" "}
+                  {prevAppointment.model}
+                </p>
+                <p>
+                  <span className="font-medium">Year:</span>{" "}
+                  {prevAppointment.year}
+                </p>
+                <p className="truncate">
+                  <span className="font-medium">Issue:</span>{" "}
+                  {prevAppointment.issue}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                  <Button variant="outline" className="flex-1 text-base">
+                    View/Upload Images
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1 text-base"
+                    onClick={handleModify}
+                  >
+                    Modify Booking
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-gray-600 text-center py-6 italic">
+                No upcoming appointments.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
