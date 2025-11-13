@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import SliderDemo from "../mechanic_landing/Slider.jsx";
 import { cn } from "@/lib/utils";
-import { Label } from "@radix-ui/react-label";
+// Note: Label import removed since it wasn't used here
 import {
   Popover,
   PopoverContent,
@@ -21,6 +21,8 @@ import {
   Check,
   X,
   Pencil,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 function MessagingButton() {
@@ -62,76 +64,133 @@ function BillingButton() {
   );
 }
 
+function AvailabilityButton() {
+  const router = useRouter();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => router.push("/mechanic_availability")}
+      className="flex items-center gap-2 text-base rounded-md"
+    >
+      <Pencil className="w-4 h-4" /> Edit Availability
+    </Button>
+  );
+}
+
+// ---- Types ----
+type Appointment = {
+  id: string;
+  date: string;
+  time: string;
+  address: string;
+  make: string;
+  model: string;
+  year: string;
+  issue: string;
+};
+
 export default function Customer_Landing() {
-  const [appointment, setAppointment] = React.useState<null | {
-    date: string;
-    time: string;
-    address: string;
-    make: string;
-    model: string;
-    year: string;
-    issue: string;
-  }>(null);
+  // Upcoming and previous appointments are now arrays
+  const [appointments, setAppointments] = React.useState<Appointment[]>([]);
+  const [prevAppointments, setPrevAppointments] = React.useState<Appointment[]>(
+    []
+  );
 
-  const [prevAppointment] = React.useState<null | {
-    date: string;
-    time: string;
-    address: string;
-    make: string;
-    model: string;
-    year: string;
-    issue: string;
-  }>(null);
 
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editedAppointment, setEditedAppointment] =
-    React.useState<typeof appointment>(null);
+    React.useState<Appointment | null>(null);
 
-  const location = "Amherst, Massachusetts"; // get this from backend later, just for example
+    
+  const [expandedIds, setExpandedIds] = React.useState<Set<string>>(
+    () => new Set()
+  );
 
-  // Mock appointment for demonstration
+  const [location, setLocation] = React.useState("Amherst, Massachusetts");
+  const [draftLocation, setDraftLocation] = React.useState(location);
+
+  const [radius, setRadius] = React.useState(25); // committed value
+  const [open, setOpen] = React.useState(false); // whether or not popover is open
+  const [draftRadius, setDraftRadius] = React.useState(radius); // temp user value
+
   React.useEffect(() => {
-    setAppointment({
-      date: "Monday, December 29, 2025",
-      time: "3:00–4:00 PM",
-      address: "620 Massachusetts Ave, Amherst, MA",
-      make: "Toyota",
-      model: "Corolla",
-      year: "2010",
-      issue:
-        "some annoying lil kids came by on Halloween n they were dressed as Michael Meyers n they smashed my windshield in",
-    });
+    setAppointments([
+      {
+        id: "upcoming-1",
+        date: "Monday, December 29, 2025",
+        time: "3:00–4:00 PM",
+        address: "620 Massachusetts Ave, Amherst, MA",
+        make: "Toyota",
+        model: "Corolla",
+        year: "2010",
+        issue:
+          "some annoying lil kids came by on Halloween n they were dressed as Michael Meyers n they smashed my windshield in",
+      },
+      {
+        id: "upcoming-2",
+        date: "Tuesday, January 6, 2026",
+        time: "9:00–10:30 AM",
+        address: "15 Main Street, Hadley, MA",
+        make: "Honda",
+        model: "Civic",
+        year: "2015",
+        issue: "check engine light keeps coming on intermittently",
+      },
+    ]);
+
+    setPrevAppointments([
+      {
+        id: "prev-1",
+        date: "Wednesday, October 1, 2025",
+        time: "1:00–2:00 PM",
+        address: "10 Pleasant St, Amherst, MA",
+        make: "Ford",
+        model: "F-150",
+        year: "2018",
+        issue: "oil leak from under the engine",
+      },
+    ]);
   }, []);
 
-  // Handle edit mode toggle
-  const handleModify = () => {
-    if (appointment) {
-      setEditedAppointment({ ...appointment });
-      setIsEditing(true);
-    }
+  // Handle edit mode toggle for a specific appointment
+  const handleModify = (appointment: Appointment) => {
+    setEditedAppointment({ ...appointment });
+    setEditingId(appointment.id);
   };
 
-  // Handle cancel
-  const handleCancel = () => {
-    setIsEditing(false);
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setEditingId(null);
     setEditedAppointment(null);
   };
 
-  // Handle save
-  const handleSave = () => {
-    if (editedAppointment) {
-      setAppointment(editedAppointment);
-      setIsEditing(false);
-    }
+  // Handle save edit
+  const handleSaveEdit = () => {
+    if (!editedAppointment || !editingId) return;
+
+    setAppointments((prev) =>
+      prev.map((appt) =>
+        appt.id === editingId ? { ...editedAppointment } : appt
+      )
+    );
+    setEditingId(null);
+    setEditedAppointment(null);
   };
 
-  // Handle input change
-  const handleChange = (
-    field: keyof NonNullable<typeof appointment>,
-    value: string
-  ) => {
+  // Handle input change while editing
+  const handleChange = (field: keyof Appointment, value: string) => {
     if (!editedAppointment) return;
     setEditedAppointment({ ...editedAppointment, [field]: value });
+  };
+
+  // Toggle showMore for a specific appointment
+  const toggleShowMore = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
   return (
@@ -144,9 +203,9 @@ export default function Customer_Landing() {
           <h1 className="text-3xl font-semibold">Admin Information</h1>
         </div>
 
-        {/* Personal Info */}
+        {/* Admin Info */}
         <Card className="bg-white p-0 rounded-md">
-          <CardContent className="flex flex-row md:flex-col p-6 gap-3">
+          <CardContent className="flex flex-col p-6 gap-3">
             <div>
               <h2 className="text-2xl font-semibold mb-2">Admin Panel</h2>
               <p>
@@ -154,12 +213,18 @@ export default function Customer_Landing() {
               </p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4">
-              <Popover>
+            <div className="min-[900px]:flex-shrink min-[900px]:grid min-[900px]:grid-cols-[auto_auto_auto_auto_auto] min-[900px]:justify-stretch grid grid-row gap-4">
+              <Popover
+                open={open}
+                onOpenChange={(o) => {
+                  setOpen(o);
+                  if (o) setDraftRadius(radius); 
+                }}
+              >
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className="flex items-center gap-2 text-base"
+                    className="flex items-center gap-2 text-base rounded-md"
                   >
                     <Pencil className="w-4 h-4" /> Edit Location
                   </Button>
@@ -178,6 +243,15 @@ export default function Customer_Landing() {
                         type="text"
                         defaultValue={location}
                         className="col-span-2 h-8"
+                        onChange={(e) => setDraftLocation(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            setLocation(draftLocation);
+                            setRadius(draftRadius);
+                            setOpen(false);
+                          }
+                        }}
                       />
                     </div>
                     <div className="space-y-2 w-full">
@@ -188,26 +262,44 @@ export default function Customer_Landing() {
                         Area of service (in miles).
                       </p>
                       <span className="w-full flex justify-between flex-row">
-                        {/* <Slider
-                          className="h-5 w-full z-10000"
-                          defaultValue={[500]}
-                          max={1000}
+                        <SliderDemo
+                          value={draftRadius}
+                          defaultValue={radius}
+                          onChange={setDraftRadius}
+                          min={0}
+                          max={50}
                           step={1}
-                        /> */}
-                        <SliderDemo />
-                        <p>25 mi.</p>
+                        />
+                        <p>{draftRadius} mi.</p>
                       </span>
-                      {/* <RadiusSlider /> */}
+                      <div className="grid justify-stretch grid-cols-[auto_auto] gap-4">
+                        <Button
+                          variant="secondary"
+                          onClick={() => {
+                            setDraftRadius(radius);
+                            setDraftLocation(location);
+                            setOpen(false);
+                          }}
+                        >
+                          <X className="w-4 h-4 mr-1" />
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setRadius(draftRadius);
+                            setLocation(draftLocation);
+                            setOpen(false);
+                          }}
+                        >
+                          <Check className="w-4 h-4 mr-1" />
+                          Save
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </PopoverContent>
               </Popover>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 text-base"
-              >
-                <Pencil className="w-4 h-4" /> Edit Availability
-              </Button>
+              <AvailabilityButton />
               <MessagingButton />
               <BookingButton />
               <BillingButton />
@@ -223,147 +315,191 @@ export default function Customer_Landing() {
             </CardTitle>
           </CardHeader>
 
-          <CardContent>
-            {appointment ? (
-              <div className="border rounded-md bg-gray-50 p-5">
-                {isEditing ? (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Date
-                        </label>
-                        <Input
-                          value={editedAppointment?.date || ""}
-                          onChange={(e) => handleChange("date", e.target.value)}
-                        />
-                      </div>
+          <CardContent className="space-y-4">
+            {appointments.length > 0 ? (
+              appointments.map((appointment) => {
+                const isEditingThis = editingId === appointment.id;
+                const isExpanded = expandedIds.has(appointment.id);
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Time
-                        </label>
-                        <Input
-                          value={editedAppointment?.time || ""}
-                          onChange={(e) => handleChange("time", e.target.value)}
-                        />
-                      </div>
+                return (
+                  <div
+                    key={appointment.id}
+                    className="border rounded-md bg-gray-50 p-5"
+                  >
+                    {isEditingThis && editedAppointment ? (
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Date
+                            </label>
+                            <Input
+                              value={editedAppointment.date}
+                              onChange={(e) =>
+                                handleChange("date", e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Address
-                        </label>
-                        <Input
-                          value={editedAppointment?.address || ""}
-                          onChange={(e) =>
-                            handleChange("address", e.target.value)
-                          }
-                        />
-                      </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Time
+                            </label>
+                            <Input
+                              value={editedAppointment.time}
+                              onChange={(e) =>
+                                handleChange("time", e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Make
-                        </label>
-                        <Input
-                          value={editedAppointment?.make || ""}
-                          onChange={(e) => handleChange("make", e.target.value)}
-                        />
-                      </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Address
+                            </label>
+                            <Input
+                              value={editedAppointment.address}
+                              onChange={(e) =>
+                                handleChange("address", e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Model
-                        </label>
-                        <Input
-                          value={editedAppointment?.model || ""}
-                          onChange={(e) =>
-                            handleChange("model", e.target.value)
-                          }
-                        />
-                      </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Make
+                            </label>
+                            <Input
+                              value={editedAppointment.make}
+                              onChange={(e) =>
+                                handleChange("make", e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Year
-                        </label>
-                        <Input
-                          value={editedAppointment?.year || ""}
-                          onChange={(e) => handleChange("year", e.target.value)}
-                        />
-                      </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Model
+                            </label>
+                            <Input
+                              value={editedAppointment.model}
+                              onChange={(e) =>
+                                handleChange("model", e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Issue
-                        </label>
-                        <Input
-                          value={editedAppointment?.issue || ""}
-                          onChange={(e) =>
-                            handleChange("issue", e.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Year
+                            </label>
+                            <Input
+                              value={editedAppointment.year}
+                              onChange={(e) =>
+                                handleChange("year", e.target.value)
+                              }
+                            />
+                          </div>
 
-                    <div className="flex gap-4 mt-6">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={handleCancel}
-                      >
-                        <X className="w-4 h-4 mr-1" /> Cancel
-                      </Button>
-                      <Button className="flex-1" onClick={handleSave}>
-                        <Check className="w-4 h-4 mr-1" /> Save Changes
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="font-semibold text-lg mb-2">
-                      {appointment.date}
-                    </p>
-                    <p>
-                      <span className="font-medium">Time:</span>{" "}
-                      {appointment.time}
-                    </p>
-                    <p>
-                      <span className="font-medium">Address:</span>{" "}
-                      {appointment.address}
-                    </p>
-                    <p>
-                      <span className="font-medium">Make:</span>{" "}
-                      {appointment.make}
-                    </p>
-                    <p>
-                      <span className="font-medium">Model:</span>{" "}
-                      {appointment.model}
-                    </p>
-                    <p>
-                      <span className="font-medium">Year:</span>{" "}
-                      {appointment.year}
-                    </p>
-                    <p className="truncate">
-                      <span className="font-medium">Issue:</span>{" "}
-                      {appointment.issue}
-                    </p>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Issue
+                            </label>
+                            <Input
+                              value={editedAppointment.issue}
+                              onChange={(e) =>
+                                handleChange("issue", e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                      <Button variant="outline" className="flex-1 text-base">
-                        View/Upload Images
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="flex-1 text-base"
-                        onClick={handleModify}
-                      >
-                        Modify Booking
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
+                        <div className="flex gap-4 mt-6">
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={handleCancelEdit}
+                          >
+                            <X className="w-4 h-4 mr-1" /> Cancel
+                          </Button>
+                          <Button
+                            className="flex-1"
+                            onClick={handleSaveEdit}
+                          >
+                            <Check className="w-4 h-4 mr-1" /> Save Changes
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="font-semibold text-lg mb-2">
+                          {appointment.date} at {appointment.time}
+                        </p>
+                        <p>
+                          <span className="font-medium">Address:</span>{" "}
+                          {appointment.address}
+                        </p>
+                        <div className={isExpanded ? "mt-2 space-y-1" : "hidden"}>
+                          <p>
+                            <span className="font-medium">Make:</span>{" "}
+                            {appointment.make}
+                          </p>
+                          <p>
+                            <span className="font-medium">Model:</span>{" "}
+                            {appointment.model}
+                          </p>
+                          <p>
+                            <span className="font-medium">Year:</span>{" "}
+                            {appointment.year}
+                          </p>
+                          <p>
+                            <span className="font-medium">Issue:</span>{" "}
+                            {appointment.issue}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row gap-4 mt-4">
+                          <Button
+                            variant="outline"
+                            className="flex-1 text-base"
+                          >
+                            <Eye className="w-4 h-4" />
+                            View Images
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="flex-1 text-base"
+                            onClick={() => toggleShowMore(appointment.id)}
+                          >
+                            {isExpanded ? (
+                              <EyeOff className="w-4 h-4" />
+                            ) : (
+                              <Eye className="w-4 h-4" />
+                            )}
+                            {isExpanded ? "Less Info" : "More Info"}
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            className="flex-1 text-base"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                            Message
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="flex-1 text-base"
+                            onClick={() => handleModify(appointment)}
+                          >
+                            <Pencil className="w-4 h-4" />
+                            Modify Booking
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
             ) : (
               <div className="text-gray-600 text-center py-6 italic">
                 No upcoming appointments.
@@ -380,53 +516,41 @@ export default function Customer_Landing() {
             </CardTitle>
           </CardHeader>
 
-          <CardContent>
-            {prevAppointment ? (
-              <div className="border rounded-md bg-gray-50 p-5">
-                <p className="font-semibold text-lg mb-2">
-                  {prevAppointment.date}
-                </p>
-                <p>
-                  <span className="font-medium">Time:</span>{" "}
-                  {prevAppointment.time}
-                </p>
-                <p>
-                  <span className="font-medium">Address:</span>{" "}
-                  {prevAppointment.address}
-                </p>
-                <p>
-                  <span className="font-medium">Make:</span>{" "}
-                  {prevAppointment.make}
-                </p>
-                <p>
-                  <span className="font-medium">Model:</span>{" "}
-                  {prevAppointment.model}
-                </p>
-                <p>
-                  <span className="font-medium">Year:</span>{" "}
-                  {prevAppointment.year}
-                </p>
-                <p className="truncate">
-                  <span className="font-medium">Issue:</span>{" "}
-                  {prevAppointment.issue}
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                  <Button variant="outline" className="flex-1 text-base">
-                    View/Upload Images
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 text-base"
-                    onClick={handleModify}
-                  >
-                    Modify Booking
-                  </Button>
+          <CardContent className="space-y-4">
+            {prevAppointments.length > 0 ? (
+              prevAppointments.map((prev) => (
+                <div
+                  key={prev.id}
+                  className="border rounded-md bg-gray-50 p-5"
+                >
+                  <p className="font-semibold text-lg mb-2">
+                    {prev.date}
+                  </p>
+                  <p>
+                    <span className="font-medium">Time:</span> {prev.time}
+                  </p>
+                  <p>
+                    <span className="font-medium">Address:</span>{" "}
+                    {prev.address}
+                  </p>
+                  <p>
+                    <span className="font-medium">Make:</span> {prev.make}
+                  </p>
+                  <p>
+                    <span className="font-medium">Model:</span> {prev.model}
+                  </p>
+                  <p>
+                    <span className="font-medium">Year:</span> {prev.year}
+                  </p>
+                  <p className="truncate">
+                    <span className="font-medium">Issue:</span>{" "}
+                    {prev.issue}
+                  </p>
                 </div>
-              </div>
+              ))
             ) : (
               <div className="text-gray-600 text-center py-6 italic">
-                No upcoming appointments.
+                No past appointments.
               </div>
             )}
           </CardContent>
