@@ -1,103 +1,210 @@
-import Image from "next/image";
+"use client";
+
+import React, { JSX, useState } from "react";
+import LoginPage from "./auth/login/page";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import {
+  Droplets,
+  Fuel,
+  BatteryCharging,
+  SquareActivity,
+  PlugZap,
+  Sparkle,
+  Car,
+  Route,
+  RefreshCcwDot,
+  ThermometerSnowflake,
+  Wrench,
+  Cog,
+  MapPin,
+  CircleDollarSign,
+  Users,
+  Award,
+  Clock,
+  ShieldCheck,
+} from "lucide-react";
+
+import type { LucideProps } from "lucide-react";
+
+const services: { name: string; icon: (p?: LucideProps) => JSX.Element }[] = [
+  { name: "Oil change", icon: (p) => <Fuel {...p} /> },
+  { name: "Battery replacement", icon: (p) => <BatteryCharging {...p} /> },
+  { name: "Brake service", icon: (p) => <Car {...p} /> },
+  { name: "Tire change/rotation", icon: (p) => <RefreshCcwDot {...p} /> },
+  { name: "Engine repair", icon: (p) => <Wrench {...p} /> },
+  { name: "Diagnostics", icon: (p) => <SquareActivity {...p} /> },
+  { name: "AC recharge", icon: (p) => <ThermometerSnowflake {...p} /> },
+  { name: "Coolant & fluids", icon: (p) => <Droplets {...p} /> },
+  { name: "Belts & hoses", icon: (p) => <Route {...p} /> },
+  { name: "Starter/alternator", icon: (p) => <Sparkle {...p} /> },
+  { name: "Spark plugs", icon: (p) => <PlugZap {...p} /> },
+  { name: "Scheduled maintenance", icon: (p) => <Cog {...p} /> },
+];
+
+const reasons: { title: string; icon: (p?: LucideProps) => JSX.Element }[] = [
+  { title: "Family-owned & operated", icon: (p) => <Users {...p} /> },
+  { title: "25+ years of experience", icon: (p) => <Award {...p} /> },
+  {
+    title: "Fair & transparent prices",
+    icon: (p) => <CircleDollarSign {...p} />,
+  },
+  { title: "Weekend & same-day service", icon: (p) => <Clock {...p} /> },
+  {
+    title: "ASE-certified technicians",
+    icon: (p) => <ShieldCheck {...p} />,
+  },
+  { title: "We come to you", icon: (p) => <MapPin {...p} /> },
+];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [zipcode, setZipcode] = useState("");
+  const [message, setMessage] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const zipChecker = () => {
+    const zip = parseInt(zipcode);
+    if (zip >= 998 && zip <= 1008) {
+      window.location.href = "/customer_landing";
+    } else {
+      setMessage(
+        "Sorry, we don't currently service your area. We serve zip codes 00998-01008."
+      );
+    }
+  };
+
+  function ServiceIcon({ children }: { children: JSX.Element }) {
+    return (
+      <div className="mb-1 flex-none shrink-0 items-center justify-center size-10 sm:size-10 lg:size-12 aspect-square overflow-hidden">
+        <div className="size-[88%]">{children}</div>
+      </div>
+    );
+  }
+
+  function ReasonIcon({ children }: { children: JSX.Element }) {
+    return (
+      <div className="flex-none shrink-0 items-center justify-center size-8 sm:size-9 lg:size-10 aspect-square overflow-hidden">
+        <div className="size-[88%]">{children}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-50">
+      <NavBar />
+
+      {/* "Are we in your area?" section  */}
+      <section className="mx-auto max-w-5xl p-4 pt-8">
+        <Card className="rounded-md pb-6 pt-5 px-6">
+          <CardContent className="p-5">
+            <h1 className="text-2xl font-semibold text-center pb-4">
+              Are we in your area?
+            </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+              <Input
+                type="text"
+                pattern="^[0-9]{5}$"
+                maxLength={5}
+                id="zipcode"
+                placeholder="Five-digit zip code"
+                className="h-10 text-base placeholder:text-base"
+                value={zipcode}
+                onChange={(e) => setZipcode(e.target.value)}
+                // currently nonfunctional, figure that out later
+                onSubmit={zipChecker}
+                required
+              />
+              <Button
+                type="submit"
+                className="h-10 bg-black text-white hover:bg-black/90 text-base transition-transform duration-150 active:scale-95"
+                onClick={zipChecker}
+              >
+                Go
+              </Button>
+
+            </div>
+            {message && <p className="text-base text-red-600 mt-2 text-center">{message}</p>}
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Services section */}
+      <section className="mx-auto max-w-5xl p-4">
+        <div className="grid grid-cols-1 md:grid-cols-[40%_1fr] gap-3 items-stretch">
+          {/* Image on left */}
+          <Card className="overflow-hidden rounded-md p-0">
+            <div className="relative h-64 md:h-full">
+              <img
+                src="/mechanic_working.jpg"
+                alt="Mechanic changing a tire"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+          </Card>
+
+          {/* Grid of services on right */}
+          <Card className="rounded-md bg-white p-0">
+            <CardContent className="py-5 px-7">
+              <h2 className="text-2xl font-semibold mb-5">Our Services</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 sm:gap-x-2 md:gap-x-3 gap-y-4 sm:gap-y-5 md:gap-y-6">
+                {services.map((s) => (
+                  <div
+                    key={s.name}
+                    className="flex flex-col items-center text-center"
+                  >
+                    <ServiceIcon>
+                      {s.icon({ className: "block w-full h-full" })}
+                    </ServiceIcon>
+                    <span className="mt-1 text-base text-black">{s.name}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Why Choose Us section */}
+      <section className="mx-auto max-w-5xl p-4">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_40%] gap-3 items-stretch">
+          {/* Image on right/on top when narrow */}
+          <Card className="order-1 md:order-2 overflow-hidden rounded-md p-0">
+            <div className="relative h-64 md:h-full">
+              <img
+                src="/mechanic_smiling.jpg"
+                alt="Mechanic smiling at camera, holding up car hood"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+          </Card>
+
+          {/* Reasons grid on left/on bottom when narrow */}
+          <Card className="order-2 md:order-1 rounded-md bg-white p-0">
+            <CardContent className="p-5">
+              <h2 className="text-2xl font-semibold mb-3">Why Choose Us</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {reasons.map((r) => (
+                  <div
+                    key={r.title}
+                    className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white/70 p-3"
+                  >
+                    <ReasonIcon>
+                      {r.icon({ className: "block w-full h-full" })}
+                    </ReasonIcon>
+                    <div className="text-base text-black">{r.title}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+      <LoginPage />
+      <Footer />
     </div>
   );
 }
