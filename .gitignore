@@ -1,6 +1,7 @@
 # ignore .env file
 env
 .env
+_pycache_
 
 # ignore package-lock.json files anywhere
 **/package-lock.json
