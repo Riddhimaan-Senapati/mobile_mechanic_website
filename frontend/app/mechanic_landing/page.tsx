@@ -96,12 +96,10 @@ export default function Customer_Landing() {
     []
   );
 
-
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editedAppointment, setEditedAppointment] =
     React.useState<Appointment | null>(null);
 
-    
   const [expandedIds, setExpandedIds] = React.useState<Set<string>>(
     () => new Set()
   );
@@ -218,7 +216,7 @@ export default function Customer_Landing() {
                 open={open}
                 onOpenChange={(o) => {
                   setOpen(o);
-                  if (o) setDraftRadius(radius); 
+                  if (o) setDraftRadius(radius);
                 }}
               >
                 <PopoverTrigger asChild>
@@ -422,10 +420,7 @@ export default function Customer_Landing() {
                           >
                             <X className="w-4 h-4 mr-1" /> Cancel
                           </Button>
-                          <Button
-                            className="flex-1"
-                            onClick={handleSaveEdit}
-                          >
+                          <Button className="flex-1" onClick={handleSaveEdit}>
                             <Check className="w-4 h-4 mr-1" /> Save Changes
                           </Button>
                         </div>
@@ -439,7 +434,7 @@ export default function Customer_Landing() {
                           <span className="font-medium">Address:</span>{" "}
                           {appointment.address}
                         </p>
-                        <div className={isExpanded ? "mt-2 space-y-1" : "hidden"}>
+                        <div className={isExpanded ? "" : "hidden"}>
                           <p>
                             <span className="font-medium">Make:</span>{" "}
                             {appointment.make}
@@ -519,19 +514,12 @@ export default function Customer_Landing() {
           <CardContent className="space-y-4">
             {prevAppointments.length > 0 ? (
               prevAppointments.map((prev) => (
-                <div
-                  key={prev.id}
-                  className="border rounded-md bg-gray-50 p-5"
-                >
+                <div key={prev.id} className="border rounded-md bg-gray-50 p-5">
                   <p className="font-semibold text-lg mb-2">
-                    {prev.date}
+                    {prev.date} at {prev.time}{" "}
                   </p>
                   <p>
-                    <span className="font-medium">Time:</span> {prev.time}
-                  </p>
-                  <p>
-                    <span className="font-medium">Address:</span>{" "}
-                    {prev.address}
+                    <span className="font-medium">Address:</span> {prev.address}
                   </p>
                   <p>
                     <span className="font-medium">Make:</span> {prev.make}
@@ -543,8 +531,7 @@ export default function Customer_Landing() {
                     <span className="font-medium">Year:</span> {prev.year}
                   </p>
                   <p className="truncate">
-                    <span className="font-medium">Issue:</span>{" "}
-                    {prev.issue}
+                    <span className="font-medium">Issue:</span> {prev.issue}
                   </p>
                 </div>
               ))
