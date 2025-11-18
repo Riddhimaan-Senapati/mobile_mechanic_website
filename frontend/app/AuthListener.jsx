@@ -12,15 +12,17 @@ export default function AuthListener() {
 
   useEffect(() => {
     //Handles logged in users like when refreshing
-    (async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+    // it ruins tests and demos, so I (Mitchell) am taking it out for now, but it would
+    //be an easier product to use witht his async function.
+    // (async () => {
+    //   const {
+    //     data: { session },
+    //   } = await supabase.auth.getSession();
 
-      if (session?.user) {
-        await redirectByRole(session.user.id, router);
-      }
-    })();
+    //   if (session?.user) {
+    //     await redirectByRole(session.user.id, router);
+    //   }
+    // })();
 
     // listening for login or log out
     const { data: listener } = supabase.auth.onAuthStateChange(
@@ -47,20 +49,39 @@ export default function AuthListener() {
  // fetches profile.role from Supabase
  // select role true is our mechanic
 async function redirectByRole(userId, router) {
-  const { data: profile, error } = await supabase
+   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("role") 
+    .select("role")
     .eq("id", userId)
     .maybeSingle();
 
-  if (error) {
-    console.error("Error fetching profile for redirect:", error);
+  console.log("Profile from Supabase:", {
+    profile,
+    profileError,
+    role: profile?.role,
+    roleType: typeof profile?.role,
+  });
+
+  // If the profile query itself failed, show the error and stop.
+  if (profileError) {
+    console.error("Error fetching profile:", profileError);
+    setError("Error fetching profile: " + profileError.message);
     return;
   }
 
-  if (profile?.role === true) {
-    router.push(MECHANIC_LANDING_PATH);
+  // Interpret "true" in the most forgiving way possible while you debug.
+  const rawRole = profile?.role;
+  const isMechanic =
+    rawRole === true ||
+    rawRole === "true" ||
+    rawRole === 1 ||
+    rawRole === "1";
+
+  if (isMechanic) {
+    console.log("Role treated as MECHANIC → /mechanic_landing");
+    router.push("/mechanic_landing");
   } else {
+    console.log("Role treated as CUSTOMER → /customer_landing");
     router.push("/customer_landing");
   }
 }
