@@ -69,7 +69,7 @@ async function redirectByRole(userId, router) {
     return;
   }
 
-  // Interpret "true" in the most forgiving way possible while you debug.
+  // sorry the true is just not working lol
   const rawRole = profile?.role;
   const isMechanic =
     rawRole === true ||

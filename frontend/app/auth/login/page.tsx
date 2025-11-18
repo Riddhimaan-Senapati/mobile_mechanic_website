@@ -39,7 +39,7 @@ export default function LoginPage() {
       .eq("id", user.id)
       .single();
 
-    console.log("profile result", { profile, profileError });
+
 
     if (profileError) {
       setError("Error fetching profile: " + profileError.message);
@@ -47,11 +47,10 @@ export default function LoginPage() {
     }
 
     const role = profile?.role;
-    console.log("role value", role, "typeof", typeof role);
+
 
     // 3) Redirect by role
     if (role) {
-      console.log("→ MECHANIC, /mechanic_landing");
       router.push("/mechanic_landing");
     } else {
       console.log("→ CUSTOMER, /customer_landing");
