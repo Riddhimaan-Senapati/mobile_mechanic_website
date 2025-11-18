@@ -1,7 +1,7 @@
 "use client";
 
 import React, { JSX, useState } from "react";
-import LoginPage from "./auth/login/page";
+
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
@@ -68,13 +68,13 @@ export default function Home() {
 
   const zipChecker = () => {
     const zip = parseInt(zipcode);
-    if (zip >= 998 && zip <= 1008) {
-      window.location.href = "/customer_landing";
-    } else {
-      setMessage(
-        "Sorry, we don't currently service your area. We serve zip codes 00998-01008."
-      );
-    }
+    // if (zip >= 998 && zip <= 1008) {
+    //   window.location.href = "/customer_landing";
+    // } else {
+    //   setMessage(
+    //     "Sorry, we don't currently service your area. We serve zip codes 00998-01008."
+    //   );
+    // }
   };
 
   function ServiceIcon({ children }: { children: JSX.Element }) {
@@ -203,7 +203,7 @@ export default function Home() {
           </Card>
         </div>
       </section>
-      <LoginPage />
+
       <Footer />
     </div>
   );
