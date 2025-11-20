@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState } from "react";
 type AuthUser = {
   id: string;
   email: string | null;
-  isMechanic: boolean; 
+  isMechanic: boolean;
 } | null;
 
 type AuthContextValue = {

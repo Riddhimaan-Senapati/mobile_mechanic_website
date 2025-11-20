@@ -14,10 +14,7 @@ function LoginButton() {
   };
 
   return (
-    <Button
-      className="object-right text-md"
-      onClick={goto_login}
-    >
+    <Button className="object-right text-md" onClick={goto_login}>
       Log In
     </Button>
   );
@@ -39,7 +36,7 @@ function HomeButton() {
 
 function ProfileButton() {
   const router = useRouter();
-  const { user } = useAuth(); // {} or null 
+  const { user } = useAuth(); // {} or null
 
   const goto_profile = () => {
     if (!user) {
@@ -85,7 +82,8 @@ export default function NavBar() {
   const { user } = useAuth();
 
   const isLoggedIn = !!user;
-  const notLoggingIn = pathname !== "/auth/login" && pathname !== "/auth/signup"
+  const notLoggingIn =
+    pathname !== "/auth/login" && pathname !== "/auth/signup";
 
   return (
     <nav className="bg-white">

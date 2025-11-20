@@ -81,8 +81,6 @@ export default function SignupPage() {
     <div className="bg-gray-50 min-h-screen">
       <NavBar />
       <AuthCard title="Create Account">
-        
-
         <SignupForm
           onSubmit={handleSignup}
           submitLabel={loading ? "Loading" : "Sign Up"}
@@ -91,13 +89,11 @@ export default function SignupPage() {
 
         {/* Google Sign Up Button */}
         <Button
-        variant="outline"
+          variant="outline"
           onClick={handleGoogleSignup}
           className="text-base w-full rounded-md mt-4"
         >
-          {googleLoading
-            ? "Signing up with Google..."
-            : "Sign Up with Google"}
+          {googleLoading ? "Signing up with Google..." : "Sign Up with Google"}
         </Button>
 
         <div className="mt-4 text-center w-full">
@@ -111,8 +107,6 @@ export default function SignupPage() {
             </Link>
           </p>
         </div>
-
-        
       </AuthCard>
     </div>
   );

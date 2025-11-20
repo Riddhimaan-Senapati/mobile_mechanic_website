@@ -44,8 +44,8 @@ export default function AuthListener() {
           rawRole === "1";
 
         setUser({
-          id: userID, 
-          email: userEmail, 
+          id: userID,
+          email: userEmail,
           isMechanic: isMechanic,
         });
 
@@ -78,7 +78,7 @@ export default function AuthListener() {
             rawRole === "true" ||
             rawRole === 1 ||
             rawRole === "1";
-          setUser({ id: userID, email: userEmail, isMechanic: isMechanic});
+          setUser({ id: userID, email: userEmail, isMechanic: isMechanic });
 
           await redirectByRole(isMechanic, router);
         }
