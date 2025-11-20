@@ -6,6 +6,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 import AuthCard from "../components/AuthCard";
 import AuthForm from "../components/AuthForm";
+import NavBar from "@/app/NavBar";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -59,20 +61,26 @@ export default function LoginPage() {
   };
 
   return (
+    <div className="bg-gray-50 min-h-screen">
+      <NavBar />
     <AuthCard title="Log In">
       <AuthForm onSubmit={handleLogin} submitLabel="Log In" />
       {error && <p className="text-red-500 mt-2">{error}</p>}
       <div className="mt-4 text-center">
         <p className="text-gray-600">
           {" "}
-          <Link
+          {/* <Link
             href="/auth/signup"
             className="text-blue-600 hover:text-blue-800 underline"
           >
             Sign up here
-          </Link>
+          </Link> */}
+          <Button variant="outline" className="w-full text-base text-black" onClick={() => router.push("/auth/signup")}>
+            Sign Up
+          </Button>
         </p>
       </div>
     </AuthCard>
+    </div>
   );
 }

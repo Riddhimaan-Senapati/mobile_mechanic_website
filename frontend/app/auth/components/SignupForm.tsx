@@ -1,4 +1,7 @@
 import { useState } from "react"
+
+import { Button } from "@/components/ui/button"
+
 // Interface for signup data
 interface SignupData {
   email: string
@@ -39,14 +42,14 @@ export default function SignupForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-white">
       <div className="grid grid-cols-2 gap-4">
         <input
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           placeholder="First Name"
-          className="p-2 border rounded"
+          className="p-2 border rounded-md"
           required
         />
         <input
@@ -54,7 +57,7 @@ export default function SignupForm({
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           placeholder="Last Name"
-          className="p-2 border rounded"
+          className="p-2 border rounded-md"
           required
         />
       </div>
@@ -64,7 +67,7 @@ export default function SignupForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
-        className="p-2 border rounded"
+        className="p-2 border rounded-md"
         required
       />
       
@@ -73,7 +76,7 @@ export default function SignupForm({
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
         placeholder="Phone Number"
-        className="p-2 border rounded"
+        className="p-2 border rounded-md"
         required
       />
       
@@ -82,7 +85,7 @@ export default function SignupForm({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-        className="p-2 border rounded"
+        className="p-2 border rounded-md"
         required
       />
       
@@ -91,13 +94,13 @@ export default function SignupForm({
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         placeholder="Confirm Password"
-        className="p-2 border rounded"
+        className="p-2 border rounded-md"
         required
       />
       
-      <button type="submit" className="bg-blue-700">
+      <Button type="submit" className="rounded-md w-full text-base">
         {submitLabel}
-      </button>
+      </Button>
     </form>
   )
 }
