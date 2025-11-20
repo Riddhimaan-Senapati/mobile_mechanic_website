@@ -6,6 +6,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 import AuthCard from "../components/AuthCard";
 import AuthForm from "../components/AuthForm";
+import NavBar from "@/app/NavBar";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -39,15 +41,12 @@ export default function LoginPage() {
       .eq("id", user.id)
       .single();
 
-
-
     if (profileError) {
       setError("Error fetching profile: " + profileError.message);
       return;
     }
 
     const role = profile?.role;
-
 
     // 3) Redirect by role
     if (role) {
@@ -59,20 +58,23 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthCard title="Log In">
-      <AuthForm onSubmit={handleLogin} submitLabel="Log In" />
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      <div className="mt-4 text-center">
-        <p className="text-gray-600">
-          {" "}
-          <Link
-            href="/auth/signup"
-            className="text-blue-600 hover:text-blue-800 underline"
-          >
-            Sign up here
-          </Link>
-        </p>
-      </div>
-    </AuthCard>
+    <div className="bg-gray-50 min-h-screen">
+      <NavBar />
+      <AuthCard title="Log In">
+        <AuthForm onSubmit={handleLogin} submitLabel="Log In" />
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <div className="mt-4 text-center w-full">
+          <p className="text-black">
+            Don't have an account?{" "}
+            <Link
+              href="/auth/signup"
+              className="font-semibold underline text-black"
+            >
+              Create one
+            </Link>
+          </p>
+        </div>
+      </AuthCard>
+    </div>
   );
 }
