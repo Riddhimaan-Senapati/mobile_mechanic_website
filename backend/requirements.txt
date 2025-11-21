@@ -1,0 +1,1 @@
+uuid browser-image-compression @supabase/supabase-js
