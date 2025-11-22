@@ -81,7 +81,7 @@ export default function Create_Booking() {
       setIsSubmitting(true);
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/add-new-booking`,
+        `${process.env.NEXT_PUBLIC_API_URL}/add-new-booking`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
