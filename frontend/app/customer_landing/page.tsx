@@ -13,6 +13,16 @@ import {
   X,
 } from "lucide-react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+import { uploadImage, deleteImage } from "@/lib/storage";
+
 function MessagingButton() {
   const router = useRouter();
   return (
@@ -67,6 +77,12 @@ export default function Customer_Landing() {
   const [editedAppointment, setEditedAppointment] =
     React.useState<typeof appointment>(null);
 
+  const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+  const [images, setImages] = React.useState<string[]>([]);
+  const [uploadingImage, setUploadingImage] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+
+
   // Mock appointment for demonstration
   React.useEffect(() => {
     setAppointment({
@@ -111,6 +127,49 @@ export default function Customer_Landing() {
     if (!editedAppointment) return;
     setEditedAppointment({ ...editedAppointment, [field]: value });
   };
+
+  const handleOpenImages = () => {
+    if (!appointment) return;
+    setImageDialogOpen(true);
+  };
+
+  const handleImageFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingImage(true);
+      const { imageUrl, error } = await uploadImage({
+        file,
+        bucket: "booking-images",
+      });
+
+      if (error || !imageUrl) {
+        console.error(error || "Image upload failed");
+        alert("Image upload failed");
+        return;
+      }
+
+      setImages((prev) => [...prev, imageUrl]);
+    } finally {
+      setUploadingImage(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleDeleteImage = async (url: string) => {
+    const { error } = await deleteImage(url);
+    if (error) {
+      console.error(error);
+      alert("Failed to delete image");
+      return;
+    }
+
+    setImages((prev) => prev.filter((u) => u !== url));
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -283,7 +342,7 @@ export default function Customer_Landing() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                      <Button variant="outline" className="flex-1 text-base">
+                      <Button variant="outline" className="flex-1 text-base" onClick={handleOpenImages}>
                         View/Upload Images
                       </Button>
                       <Button
@@ -305,6 +364,73 @@ export default function Customer_Landing() {
           </CardContent>
         </Card>
       </div>
+      <Dialog
+        open={imageDialogOpen}
+        onOpenChange={(open) => setImageDialogOpen(open)}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Appointment Images</DialogTitle>
+            <DialogDescription>
+              Upload and view images for this appointment.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageFileChange}
+            />
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingImage}
+            >
+              {uploadingImage ? "Uploading..." : "Upload Image"}
+            </Button>
+
+            {/* Thumbnails */}
+            {images.length === 0 ? (
+              <p className="text-sm text-gray-500">No images uploaded yet.</p>
+            ) : (
+              <div className="flex flex-wrap gap-3">
+                {images.map((url) => (
+                  <div
+                    key={url}
+                    className="relative w-24 h-24 rounded-md overflow-hidden border"
+                  >
+                    <img
+                      src={url}
+                      alt="Appointment image"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-1 right-1 bg-white/80 rounded-full px-1 text-xs"
+                      onClick={() => handleDeleteImage(url)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex justify-end pt-4">
+              <Button variant="default" onClick={() => setImageDialogOpen(false)}>
+                OK
+              </Button>
+            </div>
+
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
