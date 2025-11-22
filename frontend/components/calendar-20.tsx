@@ -1,26 +1,45 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-export default function Calendar20() {
-  const [date, setDate] = React.useState<Date | undefined>(
-    new Date(2025, 5, 12)
-  )
-  const [selectedTime, setSelectedTime] = React.useState<string | null>("10:00")
-  const timeSlots = Array.from({ length: 37 }, (_, i) => {
-    const totalMinutes = i * 15
-    const hour = Math.floor(totalMinutes / 60) + 9
-    const minute = totalMinutes % 60
-    return `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")}`
-  })
+type Calendar20Props = {
+  date: Date | undefined;
+  onDateChange: (date: Date | undefined) => void;
+  selectedTime: string | null;
+  onTimeChange: (time: string) => void;
+};
 
-  const bookedDates = Array.from({ length: 3 }, (_, i) => new Date(2025, 5, 17 + i))
+function timeToString(hour24: number, minute: number) {
+  const hour12 = hour24 > 12 ? hour24 - 12 : hour24;
+  const suffix = hour24 > 12 ? "PM" : "AM";
+  return `${hour12.toString()}:${minute.toString().padStart(2, "0")} ${suffix}`;
+}
+
+export default function Calendar20({
+  date,
+  onDateChange,
+  selectedTime,
+  onTimeChange,
+}: Calendar20Props) {
+  const timeSlots = Array.from({ length: 9 }, (_, i) => {
+    // DO IT BASED ON ACTUAL MECHANIC AVAILABILITY
+    const totalMinutes = i * 60;
+    const hour = Math.floor(totalMinutes / 60) + 9; // DO THE START BASED ON ACTUAL MECHANIC AVAILABILITY
+    const minute = totalMinutes % 60;
+    return timeToString(hour, minute);
+  });
+
+  const bookedDates = [
+    new Date(2025, 10, 26),
+    new Date(2025, 10, 27),
+    new Date(2025, 10, 28),
+    new Date(2025, 11, 24),
+    new Date(2025, 11, 25),
+  ];
 
   return (
     <Card className="gap-0 p-0">
@@ -31,7 +50,7 @@ export default function Calendar20() {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={onDateChange}
               defaultMonth={date}
               disabled={bookedDates}
               showOutsideDays={false}
@@ -57,7 +76,7 @@ export default function Calendar20() {
                   <Button
                     key={time}
                     variant={selectedTime === time ? "default" : "outline"}
-                    onClick={() => setSelectedTime(time)}
+                    onClick={() => onTimeChange(time)}
                     className="w-full shadow-none text-sm"
                   >
                     {time}
@@ -89,5 +108,5 @@ export default function Calendar20() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
