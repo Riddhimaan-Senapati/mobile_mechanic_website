@@ -7,6 +7,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 from datetime import datetime as dt
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
@@ -23,6 +24,17 @@ engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     with engine.begin() as conn:
